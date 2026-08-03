@@ -1,0 +1,46 @@
+class Solution {
+
+    int[] dp;
+    int[] s;
+    int n;
+
+    int solve(int i) {
+
+        if (i >= n)
+            return 0;
+
+        if (dp[i] != Integer.MIN_VALUE)
+            return dp[i];
+
+        int result = s[i] - solve(i + 1);
+
+        if (i + 1 < n)
+            result = Math.max(result,
+                    s[i] + s[i + 1] - solve(i + 2));
+
+        if (i + 2 < n)
+            result = Math.max(result,
+                    s[i] + s[i + 1] + s[i + 2] - solve(i + 3));
+
+        return dp[i] = result;
+    }
+
+    public String stoneGameIII(int[] stoneValue) {
+
+        s = stoneValue;
+        n = s.length;
+
+        dp = new int[n];
+
+        Arrays.fill(dp, Integer.MIN_VALUE);
+
+        int ans = solve(0);
+
+        if (ans > 0)
+            return "Alice";
+        else if (ans < 0)
+            return "Bob";
+        else
+            return "Tie";
+    }
+}
