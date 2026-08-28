@@ -1,0 +1,118 @@
+class Solution {
+    public String lexPalindromicPermutation(String s, String target) {
+        int n = s.length();
+
+        int[] cnt = new int[26];
+
+        for (char c : s.toCharArray()) {
+            cnt[c - 'a']++;
+        }
+
+        String oddChar = "";
+
+        for (int i = 0; i < 26; i++) {
+            if (cnt[i] % 2 == 1) {
+                if (!oddChar.equals("")) {
+                    return "";
+                }
+                oddChar = String.valueOf((char) ('a' + i));
+            }
+            cnt[i] /= 2;
+        }
+
+        int half = n / 2;
+
+        String targetLeft = target.substring(0, half);
+
+        int[] temp = cnt.clone();
+
+        for (int i = 0; i < half; i++) {
+            int x = targetLeft.charAt(i) - 'a';
+
+            if (temp[x] == 0) {
+                break;
+            }
+
+            temp[x]--;
+        }
+
+        if (canForm(targetLeft, cnt)) {
+            String candidate = makePalindrome(targetLeft, oddChar);
+
+            if (candidate.compareTo(target) > 0) {
+                return candidate;
+            }
+        }
+
+        for (int pos = half - 1; pos >= 0; pos--) {
+            int[] remaining = cnt.clone();
+            boolean possible = true;
+
+            for (int i = 0; i < pos; i++) {
+                int x = targetLeft.charAt(i) - 'a';
+
+                if (remaining[x] == 0) {
+                    possible = false;
+                    break;
+                }
+
+                remaining[x]--;
+            }
+
+            if (!possible) {
+                continue;
+            }
+
+            int current = targetLeft.charAt(pos) - 'a';
+
+            for (int j = current + 1; j < 26; j++) {
+                if (remaining[j] == 0) {
+                    continue;
+                }
+
+                remaining[j]--;
+
+                StringBuilder left = new StringBuilder();
+
+                for (int i = 0; i < pos; i++) {
+                    left.append(targetLeft.charAt(i));
+                }
+
+                left.append((char) ('a' + j));
+
+                for (int k = 0; k < 26; k++) {
+                    while (remaining[k] > 0) {
+                        left.append((char) ('a' + k));
+                        remaining[k]--;
+                    }
+                }
+
+                return makePalindrome(left.toString(), oddChar);
+            }
+        }
+
+        return "";
+    }
+
+    private boolean canForm(String str, int[] cnt) {
+        int[] temp = cnt.clone();
+
+        for (char c : str.toCharArray()) {
+            int x = c - 'a';
+
+            if (temp[x] == 0) {
+                return false;
+            }
+
+            temp[x]--;
+        }
+
+        return true;
+    }
+
+    private String makePalindrome(String left, String middle) {
+        return left +
+               middle +
+               new StringBuilder(left).reverse().toString();
+    }
+}
