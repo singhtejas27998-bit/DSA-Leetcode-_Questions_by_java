@@ -1,0 +1,22 @@
+class Solution {
+    public int firstStableIndex(int[] nums, int k) {
+        int n=nums.length;
+        int[] stable= new int[n];
+        int mnX=Integer.MAX_VALUE;
+        for(int i=n-1;i>=0;i--){
+            mnX=Math.min(mnX,nums[i]);
+            stable[i]=mnX;
+        }
+        int mXX=0;
+        for(int i=0; i<n;i++){
+            mXX=Math.max(mXX,nums[i]);
+            int result=mXX-stable[i];
+            if(result<=k)
+               return i;
+
+        }
+        
+        
+        return -1;
+    }
+}
