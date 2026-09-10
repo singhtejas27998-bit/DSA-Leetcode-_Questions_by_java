@@ -1,0 +1,20 @@
+class Solution{
+    int ans=0;
+    public int averageOfSubtree(TreeNode root){
+        dfs(root);
+        return ans;
+    }
+    private int[] dfs(TreeNode node){
+        if(node==null){
+            return new int[]{0,0};
+        }
+        int[] right=dfs(node.right);
+        int[] left=dfs(node.left);
+        int nodesum=node.val+left[0]+right[0];
+        int countnode=1+left[1]+right[1];
+        if(nodesum/countnode==node.val){
+            ans++;
+        }
+        return new int[]{nodesum,countnode};
+    }
+}
