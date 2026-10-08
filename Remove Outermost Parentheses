@@ -1,0 +1,29 @@
+class Solution {
+    public String removeOuterParentheses(String s) {
+
+        StringBuilder sb = new StringBuilder();
+        int level = 0;
+
+        for (int i = 0; i < s.length(); i++) {
+
+            char ch = s.charAt(i);
+
+            if (ch == '(') {
+                level++;
+
+                if (level > 1) {
+                    sb.append(ch);
+                }
+            } 
+            else {
+                if (level > 1) {
+                    sb.append(ch);
+                }
+
+                level--;
+            }
+        }
+
+        return sb.toString();
+    }
+}
